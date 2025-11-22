@@ -10,17 +10,33 @@ def ingreso_asistencia():
     nombre = str(input("Ingrese su nombre: ")).strip().capitalize()
     apellido = str(input("Ingrese su apellido: ")).strip().capitalize()
     print("-"*60)
-    asistencia=int(input("Ingrese si la persona está presente, llegó tarde o ausente "))
+    print("Ingrese si la persona está presente, llegó tarde o ausente ")
     print("1. Presente")
     print("2. Llegó tarde")
     print("3. Ausente")
 
-    if asistencia== 1:
-        print(f"Ingresado al sistema {nombre} {apellido},estado: presente")
-    elif asistencia== 2:
-        print(f"Ingresado al sistema {nombre} {apellido},estado: llega tarde")
-    elif asistencia ==3:
-        print(f"Ingresado al sistema {nombre} {apellido},estado: ausente")
-    else:
-        print("error, por favor ingrese una opción válida")
-ingreso_asistencia()
+   estado = {
+        1: "presente",
+        2: "llega tarde",
+        3: "ausente"
+    }
+
+    llegada = 0
+    # Bucle de validación de entrada
+    while llegada not in estado:
+        try:
+            llegada = int(input("Su opción: "))
+            if llegada not in estado:
+                print("Opción inválida, intente de nuevo.")
+        except ValueError:
+            print("Entrada inválida. Por favor, ingrese un número (1, 2 o 3).")
+    # Obtiene la cadena de estado ('presente', 'llega tarde', 'ausente').
+    status_string = estado[llegada]
+    print(f"Ingresado al sistema {nombre} {apellido}, asistencia: {status_string}")
+
+    try:
+        with open("asistencia.txt", "a") as archivo:
+            archivo.write(f"{nombre},{apellido},{status_string}\n")
+        print("Registro guardado exitosamente.")
+    except IOError:
+        print("Error al escribir en el archivo de asistencia.")
